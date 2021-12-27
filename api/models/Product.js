@@ -10,7 +10,7 @@ const productSchema = mongoose.Schema({
         required: true,
     },
     price: {
-        Type: Number,
+        type: Number,
         required: true,
     },
     brand: {
@@ -29,3 +29,5 @@ const productSchema = mongoose.Schema({
 }, {timestamps: true});
 
 const Product = mongoose.model("Product", productSchema);
+
+module.exports = Product;
