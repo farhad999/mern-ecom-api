@@ -1,4 +1,5 @@
 
+const { response } = require('express');
 const Joi = require('joi');
 const User = require('../models/User');
 const hashService = require('../services/hashService')
@@ -6,8 +7,6 @@ const hashService = require('../services/hashService')
 const register = async (req, res)=>{
 
     //check if user already exists
-
-    
 
     const schema = Joi.object({
         name: Joi.string().required(),
@@ -40,4 +39,39 @@ const register = async (req, res)=>{
 
 }
 
-module.exports = {register};
+const login = async (req, res) => {
+
+    const schema = Joi.object({
+        email: Joi.string().required(),
+        password: Joi.string().required()
+    });
+
+    const {value, error} = schema.validate(req.body);
+
+    if(!error){
+
+        const user = await User.findOne({email: value.email});
+
+        if(!user){
+        return response({status: 'failed', 'message': 'No user found with this email'});
+        }
+
+        //now compare password
+
+        const matched = await hashService.isMatched(user.password, value.password);
+
+        if(matched){
+            //generate token
+        }else{
+            return res.json({status: 'failed', message: 'Password Incorrect'});
+        }
+
+    }else{
+        return res.status(500).json({message: error.message})
+    }
+
+}
+
+module.exports = {register,
+login
+};
