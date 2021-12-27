@@ -1,0 +1,9 @@
+/node_modules
+/api/node_modules
+/client/node_modules
+/client/build
+/client/dist
+#config file
+/api/.env
+/api/test
+/api/yarn-error.log
