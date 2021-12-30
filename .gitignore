@@ -5,6 +5,6 @@
 /client/dist
 #config file
 /api/.env
-/api/test
+/test
 /api/yarn-error.log
 /client/src/pages/test
