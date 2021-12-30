@@ -10,7 +10,7 @@ router.use("/auth", authRoute);
 
 router.use("/brand", brandRoute);
 
-router.use("/category", categoryRoute);
+router.use("/categories", categoryRoute);
 
 router.use('/products', productRoute);
 
