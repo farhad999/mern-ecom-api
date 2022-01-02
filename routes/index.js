@@ -8,7 +8,7 @@ const orderRoute = require('./order.route')
 
 router.use("/auth", authRoute);
 
-router.use("/brand", brandRoute);
+router.use("/brands", brandRoute);
 
 router.use("/categories", categoryRoute);
 

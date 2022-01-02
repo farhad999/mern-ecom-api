@@ -2,12 +2,21 @@ const Joi = require("joi");
 const { TokenExpiredError } = require("jsonwebtoken");
 const Brand = require("../models/Brand");
 
+const index =async (req, res) => {
+
+  const brands = await Brand.find({});
+
+  return res.json({brands});
+}
+
 const createOrUpdate = async (req, res) => {
+
+  const {filename} = req.file;
+
   const brandSchema = Joi.object({
     id: Joi.string().optional(),
     name: Joi.string().required(),
     description: Joi.string(),
-    image: Joi.string(),
   });
 
   const { error, value } = brandSchema.validate(req.body);
@@ -20,7 +29,7 @@ const createOrUpdate = async (req, res) => {
     if (id) {
       //now find the brand by id
       try {
-        await Brand.findByIdAndUpdate({ _id: id }, rest, { new: true });
+        await Brand.findByIdAndUpdate({ _id: id }, {rest, image: filename}, { new: true });
         return res.json({ status: "success", message: "Brand updated" });
       } catch (er) {
         res.status(500).json({ message: "Server Error" + er.message });
@@ -28,7 +37,7 @@ const createOrUpdate = async (req, res) => {
     }
 
     try {
-      const brand = new Brand(value);
+      const brand = new Brand({...value, image: filename});
 
       await brand.save();
 
@@ -42,6 +51,7 @@ const createOrUpdate = async (req, res) => {
 };
 
 const deleteBrand = async (req, res) => {
+
   let { id } = req.params;
 
   try {
@@ -54,6 +64,7 @@ const deleteBrand = async (req, res) => {
 };
 
 module.exports = {
+  index,
   createOrUpdate,
   deleteBrand,
 };

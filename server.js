@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv')
 const indexRoute = require('./routes/index')
 const cors = require('cors')
+const path = require('path')
 
 const app = express();
 
@@ -24,6 +25,14 @@ mongoose.connect(process.env.MONGODB_URL)
 app.use(bodyParser.urlencoded({ extended: true }))
 // parse application/json
 app.use(bodyParser.json())
+
+//server static file
+
+//const uplaods = require('./uploads');
+
+const dir = path.join(__dirname, './uploads');
+
+app.use('/uploads', express.static(dir));
 
 //using route
 
