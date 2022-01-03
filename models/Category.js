@@ -6,7 +6,11 @@ const CategorySchema = Schema({
     name: {
         type: String,
         required: true,
-    }, 
+    },
+    slug: {
+      type: String,
+      unique: true,
+    },
     image: {
         type: String,
         default: null,
@@ -16,13 +20,7 @@ const CategorySchema = Schema({
         ref: 'Category',
         default: null,
     }],
-    products: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Product',
-            default: null,
-        }
-    ]
+    description: String,
 });
 
 const Category = mongoose.model('Category', CategorySchema);
