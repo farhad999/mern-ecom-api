@@ -1,6 +1,6 @@
 const Joi = require("joi");
-const { TokenExpiredError } = require("jsonwebtoken");
 const Brand = require("../models/Brand");
+const getSlug = require('../utils/getSlug')
 
 const index =async (req, res) => {
 
@@ -11,8 +11,6 @@ const index =async (req, res) => {
 
 const createOrUpdate = async (req, res) => {
 
-  const {filename} = req.file;
-
   const brandSchema = Joi.object({
     id: Joi.string().optional(),
     name: Joi.string().required(),
@@ -21,29 +19,40 @@ const createOrUpdate = async (req, res) => {
 
   const { error, value } = brandSchema.validate(req.body);
 
-  //return res.json(value);
-
   if (!error) {
     let { id, ...rest } = value;
+
+    const {name} = value;
+
+    const slug = await getSlug({model:Brand, name, id: id});
+
+    console.log("file", req.file);
+
+    if(req.file){
+      rest.image = req.file.filename;
+    }
+
     //update if id is passed
     if (id) {
       //now find the brand by id
       try {
-        await Brand.findByIdAndUpdate({ _id: id }, {rest, image: filename}, { new: true });
+        await Brand.findByIdAndUpdate({ _id: id }, {...rest, slug: slug}, { new: true });
         return res.json({ status: "success", message: "Brand updated" });
       } catch (er) {
         res.status(500).json({ message: "Server Error" + er.message });
       }
-    }
+    }else {
 
-    try {
-      const brand = new Brand({...value, image: filename});
+      try {
 
-      await brand.save();
+        const brand = new Brand({...rest, slug});
 
-      return res.json({ status: "success", message: "Brand Added" });
-    } catch (er) {
-      return res.status(500).json({ status: "Server error" + er.message });
+        await brand.save();
+
+        return res.json({status: "success", message: "Brand Added"});
+      } catch (er) {
+        return res.status(500).json({status: "Server error" + er.message});
+      }
     }
   } else {
     return res.json({ status: "failed", message: error.message });

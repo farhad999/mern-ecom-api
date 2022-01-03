@@ -12,7 +12,7 @@ router.put('/:id', auth, productController.update);
 
 router.get('/:id', productController.view);
 
-router.get('/', auth, productController.index);
+router.get('/', productController.index);
 
 router.post('/', auth, upload.single('thumbImage'), productController.create);
 

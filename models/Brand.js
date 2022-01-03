@@ -4,6 +4,10 @@ const brandSchema = mongoose.Schema({
     name: {
         type: String,
     },
+    slug: {
+        type: String,
+        unique: true,
+    },
     description: {
         type: String,
     },
@@ -11,7 +15,7 @@ const brandSchema = mongoose.Schema({
         type: String,
         default: null,
     }
-},{timestamps: true});
+}, {timestamps: true});
 
 const Brand = mongoose.model("Brand", brandSchema);
 
