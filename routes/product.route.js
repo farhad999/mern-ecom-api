@@ -10,7 +10,7 @@ router.delete('/:id', auth, productController.deleteProduct);
 
 router.put('/:id', auth, productController.update);
 
-router.get('/:id', productController.view);
+router.get('/:slug', productController.view);
 
 router.get('/', productController.index);
 

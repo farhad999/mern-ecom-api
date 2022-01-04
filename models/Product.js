@@ -21,6 +21,12 @@ const productSchema = mongoose.Schema(
             type: Number,
             required: true,
         },
+        offerPrice: {
+          type: Number,
+        },
+        slug: {
+          type: String,
+        },
         brand: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Brand",

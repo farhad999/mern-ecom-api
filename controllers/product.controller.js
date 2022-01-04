@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const Product = require('../models/Product');
+const getSlug = require("../utils/getSlug");
 
 const index = async (req, res) => {
 
@@ -20,7 +21,7 @@ const create = async (req, res) => {
         category: Joi.string().optional(),
         brand: Joi.string().optional(),
         thumbImage: Joi.string(),
-       // galleryImage: Joi.array(),
+        // galleryImage: Joi.array(),
     });
     //images will be handled later
 
@@ -28,73 +29,79 @@ const create = async (req, res) => {
 
     const {value, error} = schema.validate(req.body);
 
-    if(req.file){
+    if (req.file) {
         value.thumbImage = req.file.filename;
     }
 
-    if(!error){
+    if (!error) {
 
-        try{
-            await Product.create(value);
+        const slug = await getSlug({name: value.name, model: Product});
+
+        try {
+            await Product.create({...value, slug});
 
             return res.json({status: 'success', message: 'product added'});
-        }catch(er){
-            return res.status(500).json({message: "Something went wrong"+er.message});
+        } catch (er) {
+            return res.status(500).json({message: "Something went wrong" + er.message});
         }
 
-    }else{
-        return res.status(500).json({message: 'Validation error '+error.message});
+    } else {
+        return res.status(500).json({message: 'Validation error ' + error.message});
     }
 }
 
 const update = async (req, res) => {
 
-    let {id}= req.params;
+    let {id} = req.params;
 
     const schema = Joi.object({
         sku: Joi.string().optional().allow(''),
         name: Joi.string().optional(),
         description: Joi.string(),
         price: Joi.number().optional(),
+        offerPrice: Joi.number().optional(),
         stocks: Joi.number().optional(),
         brand: Joi.string().optional(),
-        category: Joi.string()
+        category: Joi.string(),
+        thumbImage: Joi.string(),
     });
 
     //images will be handled later
 
     const {value, error} = schema.validate(req.body);
 
-    if(!error){
+    if (!error) {
 
-        try{
-            await Product.findOneAndUpdate({_id:id}, value, {new: true});
+        const slug = await getSlug({name: value.name, model: Product});
+
+        try {
+            await Product.findOneAndUpdate({_id: id}, {...value, slug:slug}, {new: true});
             return res.json({status: 'success', message: 'product Updated'});
-        }catch(er){
-            return res.status(500).json({message: "Something went wrong"+er.message});
+        } catch (er) {
+            return res.status(500).json({message: "Something went wrong" + er.message});
         }
 
-    }else{
-        return res.status(500).json({message: 'Validation error '+error.message});
+    } else {
+        return res.status(500).json({message: 'Validation error ' + error.message});
     }
 }
 
 const deleteProduct = async (req, res) => {
     let {id} = req.params;
 
-    try{
+    try {
         await Product.findOneAndDelete({_id: id});
 
         return res.json({status: 'success', message: 'Product Deleted'});
-    }catch(er){
-        return res.status(500).json({"message": 'Server error '+er.message});
+    } catch (er) {
+        return res.status(500).json({"message": 'Server error ' + er.message});
     }
 }
 
 const view = async (req, res) => {
-    let {id} = req.params;
+    let {slug} = req.params;
 
-    const product = await Product.findById(id).populate('category')
+    const product = await Product.findOne({slug}).populate('category')
         .populate('brand');
 
     res.json({product});
