@@ -1,10 +1,28 @@
 const Joi = require('joi');
 const Product = require('../models/Product');
 const getSlug = require("../utils/getSlug");
+const Category = require('../models/Category');
+const Brand = require('../models/Brand')
 
 const index = async (req, res) => {
 
-    const products = await Product.find({}).populate('brand');
+    const {category, brand} = req.query;
+
+    const filter = {};
+
+    if(category){
+        const cat = await Category.findOne({slug: category});
+        filter.category = cat._id;
+    }
+
+    if(brand){
+        const brand2 = await Brand.findOne({slug: brand});
+        filter.brand = brand2._id;
+    }
+
+    console.log('filter', filter);
+
+    const products = await Product.find({...filter}).populate('brand');
 
     return res.json({products});
 }
