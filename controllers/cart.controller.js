@@ -1,111 +1,95 @@
 const Joi = require("joi");
 const Cart = require("../models/Cart");
+const User = require('../models/User')
 
 const getUserCart = async (req, res) => {
-  let user = req.user;
-  let cart = await Cart.findOne({user: user.id}).populate('items.product');
-
-  return res.json({items: cart.items});
+    let user = req.user;
+    let dbUser = await User.findById({_id:user.id}).populate('carts.product');
+    let carts = dbUser.carts;
+    return res.json({items: carts});
 }
 
 const addToCart = async (req, res) => {
-  const schema = Joi.object({
-    product: Joi.string().required(),
-    quantity: Joi.number().default(1),
-  });
+    const schema = Joi.object({
+        product: Joi.string().required(),
+        quantity: Joi.number().default(1),
+    });
 
-  const { value, error } = schema.validate(req.body);
+    const {value, error} = schema.validate(req.body);
 
-  if (!error) {
-    const user = req.user;
+    if (!error) {
+        const user = req.user;
 
-    //find the user cart
+        //find the user cart
 
-    let userCart = await Cart.findOne({ _user: user.id });
+        const dbUser = await User.findById(user.id);
 
-    if (userCart) {
-      //convert to string because mongoose _id is not a string
-      const productAlreadyInCart = userCart.items.find(
-        (item) => item.product.toString() === value.product
-      );
-      //if product already in cart then do nothing
-      //sum with new quantity
+        let carts = await dbUser.carts;
 
-      if (!productAlreadyInCart) {
-        await Cart.updateOne({ _user: user.id }, { $push: { items: value } });
-        return res.json({
-          status: "success",
-          message: "Product added to the cart",
-        });
-      } else {
-        return res.json({
-          status: "failed",
-          message: "Product already in the cart",
-        });
-      }
 
-      // Cart.updateOne({_user: user.id}, {})
+        //convert to string because mongoose _id is not a string
+        const productAlreadyInCart = carts.find(
+            (item) => item.product.toString() === value.product
+        );
+        //if product already in cart then do nothing
+        //sum with new quantity
+
+        if (!productAlreadyInCart) {
+            await User.updateOne({_id: user.id}, {$push: {carts: value}});
+            return res.json({
+                status: "success",
+                message: "Product added to the cart",
+            });
+        } else {
+            return res.json({
+                status: "failed",
+                message: "Product already in the cart",
+            });
+        }
+
     } else {
-      try {
-        let cart = new Cart({ user: user.id });
-
-        cart.items = [value];
-
-        await cart.save();
-
-        return res.json({
-          status: "success",
-          message: "Product added to the cart",
-        });
-      } catch (er) {
-        return res.status(500).json({ message: "Error: " + er.message });
-      }
+        return res
+            .status(500)
+            .json({message: "Validation error " + error.message});
     }
-  } else {
-    return res
-      .status(500)
-      .json({ message: "Validation error " + error.message });
-  }
 };
 
 const removeFromCart = async (req, res) => {
-  let { productId } = req.params;
 
-  console.log("product id", productId);
+    let {productId} = req.params;
 
-  let user = req.user;
-  try {
-    await Cart.updateOne(
-      { user: user.id },
-      { $pull: { items: {_id: productId }}}
-    );
+    let user = req.user;
 
-    res.json({ status: "success", message: "Product removed from cart" });
-  } catch (er) {
-    return res.status(500).json({ message: "Server error: " + er.message });
-  }
+    try {
+
+        await User.updateOne({_id: user.id}, {$pull: {carts: {_id: productId}}})
+
+        res.json({status: "success", message: "Product removed from cart"});
+    } catch (er) {
+        return res.status(500).json({message: "Server error: " + er.message});
+    }
 };
 
 const updateQuantity = async (req, res) => {
-  let { productId } = req.params;
-  let user = req.user;
-  //type inc, dec, update qunatity by 1
+    let {productId} = req.params;
+    let user = req.user;
+    //type inc, dec, update qunatity by 1
 
-  let { type } = req.body;
+    let {type} = req.body;
 
-  let value = type === "dec" ? -1 : 1;
+    let value = type === "dec" ? -1 : 1;
 
-  try {
-    //no decrent system so increment ad negative
-    await Cart.updateOne(
-      { user: user.id, "items.product": productId },
-      { $inc: { "items.$.quantity": value } }
-    );
+    try {
+        //no decrent system so increment ad negative
+        await Cart.updateOne(
+            {user: user.id, "items.product": productId},
+            {$inc: {"items.$.quantity": value}}
+        );
 
-    return res.json({ status: "success", message: "Quantity updated" });
-  } catch (er) {
-    return res.status(500).json({ message: "error: " + er.message });
-  }
+        return res.json({status: "success", message: "Quantity updated"});
+    } catch (er) {
+        return res.status(500).json({message: "error: " + er.message});
+    }
 };
 
-module.exports = { addToCart, removeFromCart, updateQuantity, getUserCart};
+module.exports = {addToCart, removeFromCart, updateQuantity, getUserCart};

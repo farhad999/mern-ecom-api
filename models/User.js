@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-const addressSchema = {}
-
 const userSchema = mongoose.Schema(
     {
         name: {
@@ -31,6 +29,13 @@ const userSchema = mongoose.Schema(
             type: String,
             default: "customer",
         },
+        carts: [{
+            product: {type:  mongoose.Schema.Types.ObjectId, ref: 'Product' },
+            quantity: {
+                type: Number,
+                default: 1,
+            }
+        }]
     },
     {timestamps: true}
 );
