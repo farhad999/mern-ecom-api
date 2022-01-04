@@ -34,7 +34,7 @@ const register = async (req, res) => {
 
     res.json({ status: "success", message: "User registered" });
   } else {
-    res.status(500).json({ message: error.message() });
+    res.status(500).json({ message: error.message });
   }
 };
 
