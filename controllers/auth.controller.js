@@ -78,11 +78,13 @@ const login = async (req, res) => {
   }
 };
 
-const getUser = (req, res) => {
+const getUser = async (req, res) => {
 
     let user = req.user;
 
-    return res.send({user});
+    const userWithAllField = await User.findById(user.id, {password: 0});
+
+    return res.send({user: userWithAllField});
 }
 
 module.exports = { register, login, getUser};
