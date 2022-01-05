@@ -3,11 +3,10 @@ const config = require("../configs/app.config");
 const { isMatched } = require("./hashService");
 
 const generateToken = (user) => {
-  let { _id, username, email, name, role } = user;
+  let { _id, email, name, role } = user;
 
   const payload = {
     id: _id,
-    username,
     email,
     name,
     role,
