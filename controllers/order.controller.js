@@ -75,8 +75,25 @@ const cancelledOrder = async (req, res) => {
 
 };
 
+const getAllOrders = async (req, res) =>  {
+    const orders = await Order.find({}).populate("items.product");
+    return res.json({orders})
+}
+
+const viewOrder = async (req, res) =>{
+    let {id} = req.params;
+
+    const order = await Order.findById(id).populate('items.product')
+        .populate('user');
+
+    return res.json({order});
+
+}
+
 module.exports = {
     placeOrder,
     getOrders,
     cancelledOrder,
+    getAllOrders,
+    viewOrder
 };
