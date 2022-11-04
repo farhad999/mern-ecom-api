@@ -3,15 +3,15 @@ const Cart = require("../models/Cart");
 
 const getUserCart = async (req, res) => {
   let user = req.user;
-  let carts = await Cart.find({user: user.id}).populate('items.product');
+  let cart = await Cart.findOne({user: user.id}).populate('items.product');
 
-  return res.json({carts: carts});
+  return res.json({items: cart.items});
 }
 
 const addToCart = async (req, res) => {
   const schema = Joi.object({
     product: Joi.string().required(),
-    quantity: Joi.number(),
+    quantity: Joi.number().default(1),
   });
 
   const { value, error } = schema.validate(req.body);
@@ -70,11 +70,14 @@ const addToCart = async (req, res) => {
 
 const removeFromCart = async (req, res) => {
   let { productId } = req.params;
+
+  console.log("product id", productId);
+
   let user = req.user;
   try {
     await Cart.updateOne(
       { user: user.id },
-      { $pull: { items: { product: productId } } }
+      { $pull: { items: {_id: productId }}}
     );
 
     res.json({ status: "success", message: "Product removed from cart" });
