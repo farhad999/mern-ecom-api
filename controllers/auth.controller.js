@@ -50,7 +50,7 @@ const login = async (req, res) => {
     const user = await User.findOne({ email: value.email });
 
     if (!user) {
-      return response({
+      return res.json({
         status: "failed",
         message: "No user found with this email",
       });

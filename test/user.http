@@ -1,0 +1,105 @@
+
+@baseURL =  http://localhost:4000/api/v1
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYWFjNDA4NmRkODUxZmM4MGRlOGMxMiIsInVzZXJuYW1lIjoidXNlcjIiLCJlbWFpbCI6InVzZXIyQG1haWwuY29tIiwibmFtZSI6InVzZXIgdHdvIiwiaWF0IjoxNjY2NjI3MzQ1LCJleHAiOjE2NjkyMTkzNDV9.vsLZ0JM1pHdjZnP1lzNJB9ZWObv9kA8QwO0dD4Ch1rs
+
+POST http://localhost:4000/api/v1/auth/register http/1.1
+content-type: application/json
+
+{
+    "name": "user two",
+    "username": "user2",
+    "email": "user2@mail.com",
+    "password": "12345678"
+}
+
+###
+
+POST http://localhost:4000/api/v1/auth/login http/1.1
+content-type: application/json
+
+{
+    "email" : "user2@mail.com",
+    "password": "12345678"
+}
+
+###
+
+GET http://localhost:4000/api/v1/auth/user http/1.1
+Content-Type: application/json
+//Authorization: Bearer {{token}}
+
+###
+
+POST {{baseURL}}/brand http/1.1
+Content-Type: application/json
+Authorization:Bearer {{token}}
+
+{   "name": "Brand56",
+    "description": "Brand 65 is one of the finest brand in bangaldesh"
+}
+
+###Delete Brand
+
+DELETE {{baseURL}}/brand/61c9d1b3626513aa5245d167 http/1.1
+Content-Type: application/json
+Authorization:Bearer {{token}}
+
+###Category
+
+POST {{baseURL}}/category http/1.1
+Content-Type: application/json
+Authorization:Bearer {{token}}
+
+{  
+     "name" : "Smartphone"
+}
+
+### Delete Category
+
+DELETE {{baseURL}}/category/61c9eb88c7536be2c3b3ef8a http/1.1
+Content-Type: application/json
+Authorization:Bearer {{token}}
+
+### Get all categories
+
+GET {{baseURL}}/category http/1.1
+Content-Type: application/json
+Authorization:Bearer {{token}}
+
+###Product section
+
+POST {{baseURL}}/products http/1.1
+Content-Type: application/json
+Authorization:Bearer {{token}}
+
+{
+    "sku": "prod-5",
+    "title": "Product 5 with brand",
+    "description": "Proudct def sadfsds fsafjlk",
+    "price": "456",
+    "brand": "61c9d16c626513aa5245d165",
+    "stocks": 100
+
+}
+
+###Update products
+
+PUT {{baseURL}}/products/61c9fb0ee4d53044f251d0a0 http/1.1
+Content-Type: application/json
+Authorization:Bearer {{token}}
+
+{
+    "brand": "61c9d16c626513aa5245d165",
+    "stocks": 50
+}
+
+###Cart
+
+POST {{baseURL}}/carts/add http/1.1
+Content-Type: application/json
+Authorization:Bearer {{token}}
+
+{
+    "product": "61c9fccf386795e4d0459a34",
+    "quantity": 1
+}

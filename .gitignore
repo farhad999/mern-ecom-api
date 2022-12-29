@@ -7,3 +7,4 @@
 /api/.env
 /api/test
 /api/yarn-error.log
+/client/src/pages/test

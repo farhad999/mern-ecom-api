@@ -1,0 +1,47 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\yarn\bin\yarn.js add joi
+
+PATH: 
+  C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\ProgramData\ComposerSetup\bin;C:\Program Files\PuTTY\;C:\Program Files\dotnet\;C:\Users\frd19\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\laragon\bin\php\php-7.4.19-Win32-vc15-x64;C:\laragon\bin\git\bin;C:\laragon\bin\git\cmd;C:\laragon\bin\git\mingw64\bin;C:\laragon\bin\git\usr\bin;C:\laragon\bin\java\jdk-8u131\\bin;C:\laragon\bin\laragon\utils;C:\laragon\bin\mysql\mysql-5.7.33-winx64\bin;C:\laragon\bin\nginx\nginx-1.19.10;C:\laragon\bin\notepad++;C:\laragon\bin\redis\redis-x64-3.2.100;C:\laragon\bin\telnet;C:\laragon\usr\bin;C:\Users\frd19\AppData\Local\Yarn\config\global\node_modules\.bin;C:\Users\frd19\AppData\Roaming\Composer\vendor\bin;C:\Users\frd19\AppData\Local\Microsoft\WindowsApps;C:\Users\frd19\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\frd19\AppData\Local\GitHubDesktop\bin;C:\Program Files\Java\jre1.8.0_321\bin;C:\platform-tools;C:\Program Files (x86)\CodeBlocks\MinGW\bin;C:\Program Files\Java\jdk-11.0.12\bin;C:\Program Files\Git\usr\bin;C:\Python27;C:\rclone;C:\Users\frd19\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\CMake\bin;
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  14.16.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: certificate is not yet valid
+      at TLSSocket.onConnectSecure (_tls_wrap.js:1497:34)
+      at TLSSocket.emit (events.js:315:20)
+      at TLSSocket._finishInit (_tls_wrap.js:932:8)
+      at TLSWrap.ssl.onhandshakedone (_tls_wrap.js:706:12)
+
+npm manifest: 
+  {
+    "name": "ecom",
+    "version": "1.0.0",
+    "description": "Ecommerce App",
+    "main": "server.js",
+    "scripts": {
+      "dev": "nodemon server.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "farhad Shikder",
+    "license": "ISC",
+    "dependencies": {
+      "dotenv": "^16.0.3",
+      "express": "^4.18.2",
+      "mongoose": "^6.6.7",
+      "nodemon": "^2.0.20"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
